@@ -1,15 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Slack File Previewer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Preview .md and .html files directly in Slack without downloading",
-  "permissions": ["activeTab"],
-  "host_permissions": ["https://app.slack.com/*", "https://*.slack.com/*"],
+  "permissions": ["cookies"],
+  "host_permissions": [
+    "https://*.slack.com/*",
+    "https://files.slack.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://app.slack.com/*", "https://*.slack.com/*"],
-      "js": ["lib/marked.min.js", "content.js"],
-      "css": ["styles.css"]
+      "js": ["lib/marked.min.js", "main.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://app.slack.com/*", "https://*.slack.com/*"],
+      "js": ["bridge.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
     }
   ],
   "icons": {
